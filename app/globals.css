@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --font-inter: var(--font-inter);
+  --font-playfair: var(--font-playfair);
+}
+
+.industrial-gradient {
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+}
+
+.accent-border {
+  border-left: 4px solid #3B82F6;
+}
