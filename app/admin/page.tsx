@@ -1,0 +1,267 @@
+'use client';
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/lib/supabase';
+import { Settings, Image as ImageIcon, MessageSquare, Trash2 } from 'lucide-react';
+
+const AVAILABLE_SECTIONS = [
+  { value: 'home_about_image', label: 'Home Page - About Section Image' },
+  { value: 'home_product_1', label: 'Home Page - Featured Product 1' },
+  { value: 'home_product_2', label: 'Home Page - Featured Product 2' },
+  { value: 'home_product_3', label: 'Home Page - Featured Product 3' },
+  { value: 'home_product_4', label: 'Home Page - Featured Product 4' },
+  { value: 'inventory_product_1', label: 'Products Page - Inventory 1' },
+  { value: 'inventory_product_2', label: 'Products Page - Inventory 2' },
+  { value: 'inventory_product_3', label: 'Products Page - Inventory 3' },
+  { value: 'inventory_product_4', label: 'Products Page - Inventory 4' },
+  { value: 'about_page_image', label: 'About Page - Main Image' },
+  { value: 'gallery_image_1', label: 'Gallery - Image 1' },
+  { value: 'gallery_image_2', label: 'Gallery - Image 2' },
+  { value: 'gallery_image_3', label: 'Gallery - Image 3' },
+  { value: 'gallery_image_4', label: 'Gallery - Image 4' },
+  { value: 'gallery_image_5', label: 'Gallery - Image 5' },
+  { value: 'gallery_image_6', label: 'Gallery - Image 6' },
+  { value: 'gallery_image_7', label: 'Gallery - Image 7' },
+  { value: 'gallery_image_8', label: 'Gallery - Image 8' },
+];
+
+export default function AdminPage() {
+  const [activeTab, setActiveTab] = useState('quotes');
+  const [quotes, setQuotes] = useState<any[]>([]);
+  const [images, setImages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editImage, setEditImage] = useState<any>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const fetchData = async () => {
+    setLoading(true);
+    if (activeTab === 'quotes') {
+      const { data } = await supabase.from('quotes').select('*').order('created_at', { ascending: false });
+      setQuotes(data || []);
+    } else if (activeTab === 'images') {
+      const { data } = await supabase.from('site_images').select('*').order('section', { ascending: true });
+      setImages(data || []);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    const initialFetch = async () => {
+      setLoading(true);
+      if (activeTab === 'quotes') {
+        const { data } = await supabase.from('quotes').select('*').order('created_at', { ascending: false });
+        if (isMounted) setQuotes(data || []);
+      } else if (activeTab === 'images') {
+        const { data } = await supabase.from('site_images').select('*').order('section', { ascending: true });
+        if (isMounted) setImages(data || []);
+      }
+      if (isMounted) setLoading(false);
+    };
+    initialFetch();
+    return () => { isMounted = false; };
+  }, [activeTab]);
+
+  const deleteQuote = async (id: string) => {
+    if (!confirm('Delete this quote?')) return;
+    await supabase.from('quotes').delete().eq('id', id);
+    fetchData();
+  };
+
+  const deleteImage = async (id: string) => {
+    if (!confirm('Delete this image configuration?')) return;
+    await supabase.from('site_images').delete().eq('id', id);
+    fetchData();
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `images/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage.from('public').upload(filePath, file);
+      
+      if (uploadError) {
+        alert('Upload Error: ' + uploadError.message + '\nNote: Ensure you have created a storage bucket named "public" in Supabase with public access.');
+      } else {
+        const { data } = supabase.storage.from('public').getPublicUrl(filePath);
+        if (data?.publicUrl) {
+          setEditImage((prev: any) => ({...prev, image_url: data.publicUrl}));
+        }
+      }
+    } catch (err: any) {
+      alert('Error uploading file: ' + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleImageUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editImage) return;
+    const { error } = await supabase.from('site_images').upsert({
+      id: editImage.id,
+      section: editImage.section,
+      title: editImage.title,
+      image_url: editImage.image_url
+    });
+    if (!error) {
+      setEditImage(null);
+      fetchData();
+    } else {
+      alert('Error saving image: ' + error.message);
+    }
+  };
+
+  return (
+    <div className="min-h-screen pt-20 bg-slate-50 flex">
+      {/* Sidebar */}
+      <div className="w-64 bg-white border-r border-slate-200 p-6 flex flex-col h-[calc(100vh-5rem)] sticky top-20">
+        <h2 className="text-sm font-extrabold text-blue-700 uppercase tracking-widest mb-8">Admin Dashboard</h2>
+        <nav className="space-y-2 flex-1">
+          <button 
+            onClick={() => setActiveTab('quotes')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-bold transition-all ${activeTab === 'quotes' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          >
+            <MessageSquare className="w-4 h-4" /> User Quotes
+          </button>
+          <button 
+            onClick={() => setActiveTab('images')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-bold transition-all ${activeTab === 'images' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          >
+            <ImageIcon className="w-4 h-4" /> Manage Images
+          </button>
+        </nav>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 p-8">
+        <div className="max-w-5xl mx-auto">
+          <h1 className="text-3xl font-extrabold text-slate-900 mb-8 uppercase tracking-tight">
+            {activeTab === 'quotes' ? 'Inquiries & Quotes' : 'Site Imagery'}
+          </h1>
+          
+          {loading ? (
+            <div className="text-slate-500 font-medium">Loading data from Supabase...</div>
+          ) : activeTab === 'quotes' ? (
+            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-xs">
+                  <tr>
+                    <th className="p-4">Date</th>
+                    <th className="p-4">Name / Company</th>
+                    <th className="p-4">Email</th>
+                    <th className="p-4">Requirements</th>
+                    <th className="p-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {quotes.length === 0 ? (
+                    <tr><td colSpan={5} className="p-8 text-center text-slate-500">No quotes received yet.</td></tr>
+                  ) : (
+                    quotes.map(q => (
+                      <tr key={q.id} className="hover:bg-slate-50">
+                        <td className="p-4 text-slate-500">{new Date(q.created_at).toLocaleDateString()}</td>
+                        <td className="p-4 font-medium text-slate-900">{q.name} <br/><span className="text-xs text-slate-500 font-normal">{q.company}</span></td>
+                        <td className="p-4 text-slate-600">{q.email}</td>
+                        <td className="p-4 text-slate-600 max-w-sm"><p className="line-clamp-2">{q.requirements}</p></td>
+                        <td className="p-4 text-right">
+                          <button onClick={() => deleteQuote(q.id)} className="p-2 text-red-500 hover:bg-red-50 rounded">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="bg-white rounded-lg border border-slate-200 p-8 shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <p className="text-slate-600 font-medium text-sm">
+                  Manage dynamically loaded images across the website.
+                </p>
+                <button onClick={() => setEditImage({ id: crypto.randomUUID(), section: '', title: '', image_url: '' })} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-bold shadow-sm">
+                  + Add Image
+                </button>
+              </div>
+
+              {editImage && (
+                <form onSubmit={handleImageUpdate} className="bg-slate-50 p-6 rounded border border-blue-200 mb-8">
+                  <h3 className="font-bold text-slate-800 mb-4">{editImage.id && images.find(i => i.id === editImage.id) ? 'Edit Image' : 'New Image'}</h3>
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Section Key *</label>
+                      <select 
+                        required 
+                        value={editImage.section} 
+                        onChange={e => setEditImage({...editImage, section: e.target.value})} 
+                        className="w-full border border-slate-300 rounded px-3 py-2 text-sm bg-white"
+                      >
+                        <option value="" disabled>Select a section to replace</option>
+                        {AVAILABLE_SECTIONS.map(sec => (
+                          <option key={sec.value} value={sec.value}>{sec.label} ({sec.value})</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Title / Description</label>
+                      <input type="text" value={editImage.title} onChange={e => setEditImage({...editImage, title: e.target.value})} className="w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="Hero Background" />
+                    </div>
+                    
+                    <div className="md:col-span-2 bg-white border border-slate-200 p-4 rounded-lg flex flex-col md:flex-row gap-4 items-center">
+                      <div className="flex-1 w-full">
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Image URL</label>
+                        <input type="url" required value={editImage.image_url} onChange={e => setEditImage({...editImage, image_url: e.target.value})} className="w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="https://..." />
+                      </div>
+                      <div className="text-slate-400 font-bold uppercase text-xs pt-4">OR</div>
+                      <div className="w-full md:w-64 pt-4">
+                        <label className="w-full flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded text-sm font-bold cursor-pointer border border-slate-300 transition-colors">
+                          {uploading ? 'Uploading...' : 'Upload Image'}
+                          <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} disabled={uploading} />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button type="submit" disabled={uploading} className="bg-blue-600 disabled:opacity-50 text-white px-4 py-2 rounded text-sm font-bold">Save Configuration</button>
+                    <button type="button" onClick={() => setEditImage(null)} className="bg-slate-200 text-slate-700 px-4 py-2 rounded text-sm font-bold">Cancel</button>
+                  </div>
+                </form>
+              )}
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {images.length === 0 ? (
+                  <div className="col-span-2 text-center py-12 text-slate-500 bg-slate-50 rounded border border-dashed border-slate-300">
+                    No dynamic images configured in Supabase.
+                  </div>
+                ) : (
+                  images.map(img => (
+                    <div key={img.id} className="border border-slate-200 rounded p-4 flex gap-4 items-start group relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={img.image_url} alt={img.title} className="w-24 h-24 object-cover rounded bg-slate-100" />
+                      <div className="flex-1">
+                        <h4 className="font-bold text-slate-900 text-sm uppercase">{img.section}</h4>
+                        <p className="text-xs text-slate-500 mb-2">{img.title}</p>
+                        <a href={img.image_url} target="_blank" className="text-xs text-blue-600 hover:underline break-all block mb-3 line-clamp-1">{img.image_url}</a>
+                        <div className="flex gap-2">
+                          <button onClick={() => setEditImage(img)} className="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1.5 rounded hover:bg-slate-200 uppercase tracking-wider">Edit</button>
+                          <button onClick={() => deleteImage(img.id)} className="text-xs font-bold bg-red-50 text-red-600 px-3 py-1.5 rounded hover:bg-red-100 uppercase tracking-wider">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

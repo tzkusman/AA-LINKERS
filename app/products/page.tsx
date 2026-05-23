@@ -1,4 +1,5 @@
 import Image from "next/image";
+import DynamicImage from "@/components/DynamicImage";
 import { Settings } from "lucide-react";
 import { WHATSAPP_LINK } from "@/lib/constants";
 
@@ -40,12 +41,12 @@ export default function ProductsPage() {
           {INVENTORY.map((product, idx) => (
             <div key={idx} className="bg-white border border-slate-200 p-3 rounded-lg overflow-hidden group shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
               <div className="h-48 bg-slate-200 rounded mb-3 overflow-hidden relative shrink-0">
-                <Image 
-                  src={`https://picsum.photos/seed/${product.img}/600/600`}
+                <DynamicImage 
+                  section={`inventory_product_${product.img}`}
+                  fallbackSrc={`https://picsum.photos/seed/${product.img}/600/600`}
                   alt={product.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-all duration-300"
-                  referrerPolicy="no-referrer"
                 />
               </div>
               <div className="flex justify-between items-start mb-2">

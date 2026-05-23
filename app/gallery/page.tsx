@@ -1,4 +1,5 @@
 import Image from "next/image";
+import DynamicImage from "@/components/DynamicImage";
 import { Factory } from "lucide-react";
 
 export const metadata = {
@@ -32,12 +33,12 @@ export default function GalleryPage() {
               key={i}
               className={`group relative overflow-hidden bg-slate-100 rounded-lg ${i === 1 || i === 8 ? 'md:col-span-2 md:row-span-2 aspect-square' : 'aspect-square'}`}
             >
-              <Image 
-                src={`https://picsum.photos/seed/gallery${i}/800/800`}
+              <DynamicImage 
+                section={`gallery_image_${i}`}
+                fallbackSrc={`https://picsum.photos/seed/gallery${i}/800/800`}
                 alt={`Gallery Image ${i}`}
                 fill
                 className="object-cover transition-all duration-500 group-hover:scale-105 opacity-90 group-hover:opacity-100"
-                referrerPolicy="no-referrer"
               />
             </div>
           ))}

@@ -1,5 +1,6 @@
-import { MapPin, Phone, MessageCircle, Mail, Send } from "lucide-react";
+import { MapPin, Phone, MessageCircle, Mail } from "lucide-react";
 import { WHATSAPP_LINK, WHATSAPP_NUMBER, PHONE_NUMBER, ADDRESS, EMAIL_ADDRESS, NTN_NUMBER } from "@/lib/constants";
+import ContactForm from "@/components/ContactForm";
 
 export const metadata = {
   title: "Contact Us | A.A Linkers",
@@ -85,35 +86,7 @@ export default function ContactPage() {
 
           {/* Contact Input Form Simulation */}
           <div>
-            <div className="bg-white rounded-xl border border-slate-200 shadow-xl shadow-blue-900/5 p-8 relative overflow-hidden h-full flex flex-col">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-[100px] pointer-events-none"></div>
-              <h3 className="text-2xl font-extrabold uppercase text-slate-900 mb-4">Send an Inquiry</h3>
-              <p className="text-sm text-slate-500 font-medium mb-8">Fill out the form below or use our direct contact buttons for quicker responses.</p>
-              
-              <form className="space-y-4 mb-8 flex-1">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Name</label>
-                    <input type="text" className="w-full border border-slate-300 rounded px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-sm font-medium" placeholder="John Doe" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Company</label>
-                    <input type="text" className="w-full border border-slate-300 rounded px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-sm font-medium" placeholder="ABC Industries" />
-                  </div>
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Email</label>
-                  <input type="email" className="w-full border border-slate-300 rounded px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-sm font-medium" placeholder="john@example.com" />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Requirements</label>
-                  <textarea rows={4} className="w-full border border-slate-300 rounded px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all resize-none text-sm font-medium" placeholder="We need bulk ball valves..."></textarea>
-                </div>
-                <button type="button" className="w-full bg-blue-700 hover:bg-blue-800 text-white py-4 rounded font-bold uppercase tracking-widest flex justify-center items-center gap-2 transition-all shadow-md shadow-blue-200">
-                  <Send className="w-5 h-5" /> Send Message
-                </button>
-              </form>
-            </div>
+            <ContactForm />
           </div>
 
         </div>

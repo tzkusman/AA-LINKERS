@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import DynamicImage from "@/components/DynamicImage";
 import { Wrench, ArrowRight } from "lucide-react";
 
 export const metadata = {
@@ -17,12 +18,12 @@ export default function AboutPage() {
 
       <section className="py-24 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
         <div className="relative aspect-square md:aspect-[4/3] rounded-lg bg-slate-100 overflow-hidden shadow-xl">
-          <Image 
-            src="https://picsum.photos/seed/valvesetup/800/600" 
+          <DynamicImage 
+            section="about_page_image"
+            fallbackSrc="https://picsum.photos/seed/valvesetup/800/600" 
             alt="Industrial Setup" 
             fill 
             className="object-cover hover:scale-105 transition-all duration-300"
-            referrerPolicy="no-referrer"
           />
         </div>
         

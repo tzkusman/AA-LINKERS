@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import DynamicImage from '@/components/DynamicImage';
 import { motion } from 'motion/react';
 import { WHATSAPP_LINK } from '@/lib/constants';
 import { MessageCircle, ArrowRight, Wrench, Settings } from 'lucide-react';
@@ -60,12 +61,12 @@ export default function Home() {
               viewport={{ once: true }}
               className="relative aspect-square md:aspect-[4/3] rounded-lg bg-slate-100 overflow-hidden"
             >
-              <Image 
-                src="https://picsum.photos/seed/valvesetup/800/600" 
+              <DynamicImage
+                section="home_about_image"
+                fallbackSrc="https://picsum.photos/seed/valvesetup/800/600" 
                 alt="Industrial Setup" 
                 fill 
                 className="object-cover hover:scale-105 transition-all duration-300"
-                referrerPolicy="no-referrer"
               />
             </motion.div>
             
@@ -124,12 +125,12 @@ export default function Home() {
                 className="bg-white border border-slate-200 p-3 rounded-lg overflow-hidden group shadow-sm flex flex-col"
               >
                 <div className="h-48 bg-slate-200 rounded mb-3 overflow-hidden relative shrink-0">
-                  <Image 
-                    src={`https://picsum.photos/seed/${product.img}/600/600`}
+                  <DynamicImage 
+                    section={`home_product_${product.img}`}
+                    fallbackSrc={`https://picsum.photos/seed/${product.img}/600/600`}
                     alt={product.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-all duration-300"
-                    referrerPolicy="no-referrer"
                   />
                 </div>
                 <div className="flex justify-between items-start mb-1">
