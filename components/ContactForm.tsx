@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Send } from 'lucide-react';
 
 export default function ContactForm() {
-  const [formData, setFormData] = useState({ name: '', company: '', email: '', requirements: '' });
+  const [formData, setFormData] = useState({ name: '', company: '', phone: '', email: '', requirements: '' });
   const [status, setStatus] = useState({ loading: false, success: false, error: '' });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,7 +20,7 @@ export default function ContactForm() {
       if (!res.ok) throw new Error('Failed to submit quote');
       
       setStatus({ loading: false, success: true, error: '' });
-      setFormData({ name: '', company: '', email: '', requirements: '' });
+      setFormData({ name: '', company: '', phone: '', email: '', requirements: '' });
     } catch (err) {
       setStatus({ loading: false, success: false, error: 'Failed to send message. Please try again or use WhatsApp.' });
     }
@@ -56,16 +56,29 @@ export default function ContactForm() {
             />
           </div>
         </div>
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Email *</label>
-          <input 
-            required
-            type="email" 
-            value={formData.email}
-            onChange={(e) => setFormData({...formData, email: e.target.value})}
-            className="w-full border border-slate-300 rounded px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-sm font-medium" 
-            placeholder="john@example.com" 
-          />
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Email *</label>
+            <input 
+              required
+              type="email" 
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              className="w-full border border-slate-300 rounded px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-sm font-medium" 
+              placeholder="john@example.com" 
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Phone Number *</label>
+            <input 
+              required
+              type="tel" 
+              value={formData.phone}
+              onChange={(e) => setFormData({...formData, phone: e.target.value})}
+              className="w-full border border-slate-300 rounded px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-sm font-medium" 
+              placeholder="+1234567890" 
+            />
+          </div>
         </div>
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Requirements *</label>

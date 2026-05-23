@@ -4,15 +4,15 @@ import { supabase } from '@/lib/supabase';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, company, email, requirements } = body;
+    const { name, company, phone, email, requirements } = body;
 
-    if (!name || !email || !requirements) {
+    if (!name || !email || !phone || !requirements) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     const { data, error } = await supabase
       .from('quotes')
-      .insert([{ name, company, email, requirements }]);
+      .insert([{ name, company, phone, email, requirements }]);
 
     if (error) {
       console.error('Supabase insert error:', error);

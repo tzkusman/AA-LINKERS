@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import DynamicText from '@/components/DynamicText';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function Navbar() {
             href={link.href} 
             className={`transition-colors hover:text-blue-700 ${pathname === link.href ? 'text-blue-700' : ''}`}
           >
-            {link.name}
+            <DynamicText section={`nav_link_${link.name.toLowerCase()}`} fallback={link.name} className="pointer-events-none" />
           </Link>
         ))}
       </div>
@@ -56,7 +57,7 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
               className={`font-semibold uppercase tracking-wider ${pathname === link.href ? 'text-blue-700' : 'text-slate-700'}`}
             >
-              {link.name}
+              <DynamicText section={`nav_link_${link.name.toLowerCase()}`} fallback={link.name} className="pointer-events-none" />
             </Link>
           ))}
           <Link

@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import DynamicImage from '@/components/DynamicImage';
+import DynamicText from '@/components/DynamicText';
 import { motion } from 'motion/react';
 import { WHATSAPP_LINK } from '@/lib/constants';
 import { MessageCircle, ArrowRight, Wrench, Settings } from 'lucide-react';
@@ -22,13 +23,23 @@ export default function Home() {
             <span className="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded mb-4 uppercase tracking-widest border border-blue-500/10">
               Industrial Valve Supplier
             </span>
-            <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-[1.1] mb-6">
-              Reliable Bulk Supply <br />
-              <span className="text-blue-400">For Global Industries.</span>
-            </h1>
-            <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl font-normal leading-relaxed">
-              Direct traders and suppliers of premium new and used industrial valves. Sourcing directly from bulk container shipments to provide cost-effective engineering solutions.
-            </p>
+            <DynamicText
+              as="h1"
+              section="home_hero_title"
+              fallback={
+                <>
+                  Reliable Bulk Supply <br />
+                  <span className="text-blue-400">For Global Industries.</span>
+                </>
+              }
+              className="text-5xl md:text-7xl font-extrabold text-white leading-[1.1] mb-6"
+            />
+            <DynamicText
+              as="p"
+              section="home_hero_subtitle"
+              fallback="Direct traders and suppliers of premium new and used industrial valves. Sourcing directly from bulk container shipments to provide cost-effective engineering solutions."
+              className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl font-normal leading-relaxed"
+            />
             <div className="flex flex-wrap gap-4">
               <a 
                 href={WHATSAPP_LINK}
@@ -79,12 +90,22 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-slate-900 mb-2 uppercase tracking-tight flex items-center gap-2">
                 <Wrench className="w-5 h-5 text-blue-500" /> Business Model
               </h2>
-              <h3 className="text-xl font-bold text-slate-800 mb-6">
-                Cost-Effective Bulk Procurement
-              </h3>
-              <p className="text-slate-600 text-sm leading-relaxed mb-6 font-medium">
-                Unlike standard importers, we specialize in <strong className="text-slate-900">bulk purchasing</strong> from already shipped containers, allowing us to offer aggressive pricing to factories and contractors. We bridge the gap between heavy imports and industrial end-users.
-              </p>
+              <DynamicText
+                as="h3"
+                section="home_about_title"
+                fallback="Cost-Effective Bulk Procurement"
+                className="text-xl font-bold text-slate-800 mb-6"
+              />
+              <DynamicText
+                as="p"
+                section="home_about_desc"
+                fallback={
+                  <>
+                    Unlike standard importers, we specialize in <strong className="text-slate-900">bulk purchasing</strong> from already shipped containers, allowing us to offer aggressive pricing to factories and contractors. We bridge the gap between heavy imports and industrial end-users.
+                  </>
+                }
+                className="text-slate-600 text-sm leading-relaxed mb-6 font-medium"
+              />
               
               <Link href="/about" className="inline-flex items-center gap-2 text-blue-700 font-bold uppercase tracking-wider text-sm hover:text-blue-800 group mt-4">
                 Read Our Full Story <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -101,12 +122,18 @@ export default function Home() {
             <h2 className="text-sm font-bold text-blue-500 tracking-widest uppercase mb-3 flex items-center justify-center gap-2">
               <Settings className="w-4 h-4" /> Our Inventory
             </h2>
-            <h3 className="text-4xl font-extrabold text-slate-900 leading-tight">
-              Featured Valve Categories
-            </h3>
-            <p className="mt-4 text-slate-600 text-sm">
-              We stock a wide range of new and carefully inspected used valves, ready for bulk dispatch.
-            </p>
+            <DynamicText
+              as="h3"
+              section="home_featured_title"
+              fallback="Featured Valve Categories"
+              className="text-4xl font-extrabold text-slate-900 leading-tight"
+            />
+            <DynamicText
+              as="p"
+              section="home_featured_desc"
+              fallback="We stock a wide range of new and carefully inspected used valves, ready for bulk dispatch."
+              className="mt-4 text-slate-600 text-sm"
+            />
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -134,12 +161,22 @@ export default function Home() {
                   />
                 </div>
                 <div className="flex justify-between items-start mb-1">
-                  <h3 className="font-bold text-sm text-slate-800 uppercase">{product.title}</h3>
+                  <DynamicText 
+                    as="h3"
+                    section={`home_product_${product.img}_title`}
+                    fallback={product.title}
+                    className="font-bold text-sm text-slate-800 uppercase"
+                  />
                   <span className={`text-[10px] px-1.5 rounded font-bold ${product.badgeColor}`}>
                     {product.state}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mb-4 font-medium">Size: {product.size}</p>
+                <DynamicText 
+                  as="p"
+                  section={`home_product_${product.img}_size`}
+                  fallback={`Size: ${product.size}`}
+                  className="text-[11px] text-slate-500 mb-4 font-medium"
+                />
                 <a 
                   href={WHATSAPP_LINK}
                   target="_blank"
@@ -163,8 +200,18 @@ export default function Home() {
       {/* 4. CALL TO ACTION */}
       <section className="py-24 bg-white relative text-center">
         <div className="max-w-2xl mx-auto px-6">
-          <h2 className="text-3xl font-extrabold text-slate-900 mb-6 uppercase tracking-tight">Need A Custom Quote?</h2>
-          <p className="text-slate-600 mb-8 font-medium">Get in touch directly to discuss your specific factory requirements or request pricing on bulk containers.</p>
+          <DynamicText
+            as="h2"
+            section="home_cta_title"
+            fallback="Need A Custom Quote?"
+            className="text-3xl font-extrabold text-slate-900 mb-6 uppercase tracking-tight"
+          />
+          <DynamicText
+            as="p"
+            section="home_cta_desc"
+            fallback="Get in touch directly to discuss your specific factory requirements or request pricing on bulk containers."
+            className="text-slate-600 mb-8 font-medium"
+          />
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/contact" className="bg-slate-900 text-white px-8 py-3 rounded font-bold shadow-lg hover:bg-slate-800 transition-all uppercase tracking-wider text-sm">
               Contact Us Today

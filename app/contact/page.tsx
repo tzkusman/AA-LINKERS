@@ -1,5 +1,5 @@
 import { MapPin, Phone, MessageCircle, Mail } from "lucide-react";
-import { WHATSAPP_LINK, WHATSAPP_NUMBER, PHONE_NUMBER, ADDRESS, EMAIL_ADDRESS, NTN_NUMBER } from "@/lib/constants";
+import { WHATSAPP_LINK, WHATSAPP_NUMBER, PHONE_NUMBER, ADDRESS, EMAIL_ADDRESS } from "@/lib/constants";
 import ContactForm from "@/components/ContactForm";
 
 export const metadata = {
@@ -74,10 +74,6 @@ export default function ContactPage() {
                   <div>
                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">Company Name</h4>
                     <p className="font-extrabold text-lg text-slate-900 uppercase">A.A Linkers</p>
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">NTN Number</h4>
-                    <p className="font-mono text-slate-600 border border-slate-200 bg-slate-50 px-3 py-1.5 rounded inline-block text-sm font-medium">{NTN_NUMBER}</p>
                   </div>
                 </div>
               </div>

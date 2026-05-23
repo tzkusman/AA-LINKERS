@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Settings, Image as ImageIcon, MessageSquare, Trash2 } from 'lucide-react';
+import { Settings, Image as ImageIcon, MessageSquare, Trash2, Type } from 'lucide-react';
 
 const AVAILABLE_SECTIONS = [
   { value: 'home_about_image', label: 'Home Page - About Section Image' },
@@ -24,13 +24,39 @@ const AVAILABLE_SECTIONS = [
   { value: 'gallery_image_8', label: 'Gallery - Image 8' },
 ];
 
+const AVAILABLE_TEXT_SECTIONS = [
+  { value: 'home_hero_title', label: 'Home Page - Hero Title' },
+  { value: 'home_hero_subtitle', label: 'Home Page - Hero Subtitle' },
+  { value: 'home_about_title', label: 'Home Page - About Title' },
+  { value: 'home_about_desc', label: 'Home Page - About Description' },
+  { value: 'home_featured_title', label: 'Home Page - Featured Title' },
+  { value: 'home_featured_desc', label: 'Home Page - Featured Description' },
+  { value: 'home_cta_title', label: 'Home Page - CTA Title' },
+  { value: 'home_cta_desc', label: 'Home Page - CTA Description' },
+  { value: 'home_product_valve1_title', label: 'Home Page - Product 1 Title' },
+  { value: 'home_product_valve1_size', label: 'Home Page - Product 1 Size' },
+  { value: 'home_product_valve2_title', label: 'Home Page - Product 2 Title' },
+  { value: 'home_product_valve2_size', label: 'Home Page - Product 2 Size' },
+  { value: 'home_product_valve3_title', label: 'Home Page - Product 3 Title' },
+  { value: 'home_product_valve3_size', label: 'Home Page - Product 3 Size' },
+  { value: 'home_product_valve4_title', label: 'Home Page - Product 4 Title' },
+  { value: 'home_product_valve4_size', label: 'Home Page - Product 4 Size' },
+  { value: 'nav_link_home', label: 'Navigation - Home' },
+  { value: 'nav_link_products', label: 'Navigation - Products' },
+  { value: 'nav_link_about', label: 'Navigation - About' },
+  { value: 'nav_link_gallery', label: 'Navigation - Gallery' },
+  { value: 'nav_link_contact', label: 'Navigation - Contact' },
+];
+
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('quotes');
   const [quotes, setQuotes] = useState<any[]>([]);
   const [images, setImages] = useState<any[]>([]);
+  const [texts, setTexts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editImage, setEditImage] = useState<any>(null);
   const [uploading, setUploading] = useState(false);
+  const [editText, setEditText] = useState<any>(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -40,6 +66,9 @@ export default function AdminPage() {
     } else if (activeTab === 'images') {
       const { data } = await supabase.from('site_images').select('*').order('section', { ascending: true });
       setImages(data || []);
+    } else if (activeTab === 'content') {
+      const { data } = await supabase.from('site_content').select('*').order('section', { ascending: true });
+      setTexts(data || []);
     }
     setLoading(false);
   };
@@ -54,6 +83,9 @@ export default function AdminPage() {
       } else if (activeTab === 'images') {
         const { data } = await supabase.from('site_images').select('*').order('section', { ascending: true });
         if (isMounted) setImages(data || []);
+      } else if (activeTab === 'content') {
+        const { data } = await supabase.from('site_content').select('*').order('section', { ascending: true });
+        if (isMounted) setTexts(data || []);
       }
       if (isMounted) setLoading(false);
     };
@@ -70,6 +102,12 @@ export default function AdminPage() {
   const deleteImage = async (id: string) => {
     if (!confirm('Delete this image configuration?')) return;
     await supabase.from('site_images').delete().eq('id', id);
+    fetchData();
+  };
+
+  const deleteText = async (id: string) => {
+    if (!confirm('Delete this text configuration?')) return;
+    await supabase.from('site_content').delete().eq('id', id);
     fetchData();
   };
 
@@ -117,6 +155,23 @@ export default function AdminPage() {
     }
   };
 
+  const handleTextUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editText) return;
+    const { error } = await supabase.from('site_content').upsert({
+      id: editText.id,
+      section: editText.section,
+      title: editText.title,
+      content: editText.content
+    });
+    if (!error) {
+      setEditText(null);
+      fetchData();
+    } else {
+      alert('Error saving text: ' + error.message);
+    }
+  };
+
   return (
     <div className="min-h-screen pt-20 bg-slate-50 flex">
       {/* Sidebar */}
@@ -135,6 +190,12 @@ export default function AdminPage() {
           >
             <ImageIcon className="w-4 h-4" /> Manage Images
           </button>
+          <button 
+            onClick={() => setActiveTab('content')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-bold transition-all ${activeTab === 'content' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50'}`}
+          >
+            <Type className="w-4 h-4" /> Manage Text Content
+          </button>
         </nav>
       </div>
 
@@ -142,7 +203,7 @@ export default function AdminPage() {
       <div className="flex-1 p-8">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-3xl font-extrabold text-slate-900 mb-8 uppercase tracking-tight">
-            {activeTab === 'quotes' ? 'Inquiries & Quotes' : 'Site Imagery'}
+            {activeTab === 'quotes' ? 'Inquiries & Quotes' : activeTab === 'images' ? 'Site Imagery' : 'Site Text Content'}
           </h1>
           
           {loading ? (
@@ -167,7 +228,7 @@ export default function AdminPage() {
                       <tr key={q.id} className="hover:bg-slate-50">
                         <td className="p-4 text-slate-500">{new Date(q.created_at).toLocaleDateString()}</td>
                         <td className="p-4 font-medium text-slate-900">{q.name} <br/><span className="text-xs text-slate-500 font-normal">{q.company}</span></td>
-                        <td className="p-4 text-slate-600">{q.email}</td>
+                        <td className="p-4 text-slate-600">{q.email}<br/><span className="text-xs text-blue-600 font-medium">{q.phone}</span></td>
                         <td className="p-4 text-slate-600 max-w-sm"><p className="line-clamp-2">{q.requirements}</p></td>
                         <td className="p-4 text-right">
                           <button onClick={() => deleteQuote(q.id)} className="p-2 text-red-500 hover:bg-red-50 rounded">
@@ -180,7 +241,7 @@ export default function AdminPage() {
                 </tbody>
               </table>
             </div>
-          ) : (
+          ) : activeTab === 'images' ? (
             <div className="bg-white rounded-lg border border-slate-200 p-8 shadow-sm">
               <div className="flex justify-between items-center mb-6">
                 <p className="text-slate-600 font-medium text-sm">
@@ -253,6 +314,75 @@ export default function AdminPage() {
                           <button onClick={() => setEditImage(img)} className="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1.5 rounded hover:bg-slate-200 uppercase tracking-wider">Edit</button>
                           <button onClick={() => deleteImage(img.id)} className="text-xs font-bold bg-red-50 text-red-600 px-3 py-1.5 rounded hover:bg-red-100 uppercase tracking-wider">Delete</button>
                         </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white rounded-lg border border-slate-200 p-8 shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <p className="text-slate-600 font-medium text-sm">
+                  Manage dynamically loaded text (headings, paragraphs) across the website.
+                </p>
+                <button onClick={() => setEditText({ id: crypto.randomUUID(), section: '', title: '', content: '' })} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-bold shadow-sm">
+                  + Add Text
+                </button>
+              </div>
+
+              {editText && (
+                <form onSubmit={handleTextUpdate} className="bg-slate-50 p-6 rounded border border-blue-200 mb-8">
+                  <h3 className="font-bold text-slate-800 mb-4">{editText.id && texts.find(t => t.id === editText.id) ? 'Edit Text' : 'New Text'}</h3>
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Section Key *</label>
+                      <select 
+                        required 
+                        value={editText.section} 
+                        onChange={e => setEditText({...editText, section: e.target.value})} 
+                        className="w-full border border-slate-300 rounded px-3 py-2 text-sm bg-white"
+                      >
+                        <option value="" disabled>Select a section to edit text</option>
+                        {AVAILABLE_TEXT_SECTIONS.map(sec => (
+                          <option key={sec.value} value={sec.value}>{sec.label} ({sec.value})</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Title / Description</label>
+                      <input type="text" value={editText.title} onChange={e => setEditText({...editText, title: e.target.value})} className="w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="Hero Section Title" />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Text Content *</label>
+                      <textarea required rows={4} value={editText.content} onChange={e => setEditText({...editText, content: e.target.value})} className="w-full border border-slate-300 rounded px-3 py-2 text-sm resize-y" placeholder="The actual text content to display..." />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded text-sm font-bold">Save Configuration</button>
+                    <button type="button" onClick={() => setEditText(null)} className="bg-slate-200 text-slate-700 px-4 py-2 rounded text-sm font-bold">Cancel</button>
+                  </div>
+                </form>
+              )}
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {texts.length === 0 ? (
+                  <div className="col-span-2 text-center py-12 text-slate-500 bg-slate-50 rounded border border-dashed border-slate-300">
+                    No dynamic text configured in Supabase.
+                  </div>
+                ) : (
+                  texts.map(txt => (
+                    <div key={txt.id} className="border border-slate-200 rounded p-4 flex flex-col group relative bg-white">
+                      <div className="flex-1 mb-4">
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-bold text-slate-900 text-sm uppercase">{txt.section}</h4>
+                        </div>
+                        <p className="text-xs text-slate-500 mb-2 font-medium bg-slate-50 p-1.5 rounded inline-block">{txt.title || 'No Title'}</p>
+                        <div className="text-sm text-slate-700 bg-slate-50 border border-slate-100 p-3 rounded h-24 overflow-y-auto mt-2 whitespace-pre-wrap">{txt.content}</div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => setEditText(txt)} className="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1.5 rounded hover:bg-slate-200 uppercase tracking-wider">Edit</button>
+                        <button onClick={() => deleteText(txt.id)} className="text-xs font-bold bg-red-50 text-red-600 px-3 py-1.5 rounded hover:bg-red-100 uppercase tracking-wider">Delete</button>
                       </div>
                     </div>
                   ))
