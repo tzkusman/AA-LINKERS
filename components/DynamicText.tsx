@@ -14,18 +14,25 @@ export default function DynamicText({
   as?: any 
 }) {
   const [text, setText] = useState<string | React.ReactNode>(fallback);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     const fetchText = async () => {
-      const { data } = await supabase.from('site_content').select('content').eq('section', section).single();
-      if (data?.content && isMounted) {
-        setText(data.content);
+      try {
+        const { data } = await supabase.from('site_content').select('content').eq('section', section).single();
+        if (data?.content && isMounted) {
+          setText(data.content);
+        }
+      } catch (err) {
+        // Ignore error
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     };
     fetchText();
     return () => { isMounted = false; };
   }, [section]);
 
-  return <Component className={className}>{text}</Component>;
+  return <Component className={`${className || ''} transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>{text}</Component>;
 }
