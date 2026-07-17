@@ -5,14 +5,18 @@ import { Settings, Image as ImageIcon, MessageSquare, Trash2, Type } from 'lucid
 
 const AVAILABLE_SECTIONS = [
   { value: 'home_about_image', label: 'Home Page - About Section Image' },
-  { value: 'home_product_1', label: 'Home Page - Featured Product 1' },
-  { value: 'home_product_2', label: 'Home Page - Featured Product 2' },
-  { value: 'home_product_3', label: 'Home Page - Featured Product 3' },
-  { value: 'home_product_4', label: 'Home Page - Featured Product 4' },
-  { value: 'inventory_product_1', label: 'Products Page - Inventory 1' },
-  { value: 'inventory_product_2', label: 'Products Page - Inventory 2' },
-  { value: 'inventory_product_3', label: 'Products Page - Inventory 3' },
-  { value: 'inventory_product_4', label: 'Products Page - Inventory 4' },
+  { value: 'home_product_valve1', label: 'Home Page - Featured Product 1 (valve1)' },
+  { value: 'home_product_valve2', label: 'Home Page - Featured Product 2 (valve2)' },
+  { value: 'home_product_valve3', label: 'Home Page - Featured Product 3 (valve3)' },
+  { value: 'home_product_valve4', label: 'Home Page - Featured Product 4 (valve4)' },
+  { value: 'inventory_product_valve1', label: 'Products Page - Inventory 1 (valve1)' },
+  { value: 'inventory_product_valve2', label: 'Products Page - Inventory 2 (valve2)' },
+  { value: 'inventory_product_valve3', label: 'Products Page - Inventory 3 (valve3)' },
+  { value: 'inventory_product_valve4', label: 'Products Page - Inventory 4 (valve4)' },
+  { value: 'inventory_product_valve5', label: 'Products Page - Inventory 5 (valve5)' },
+  { value: 'inventory_product_valve6', label: 'Products Page - Inventory 6 (valve6)' },
+  { value: 'inventory_product_valve7', label: 'Products Page - Inventory 7 (valve7)' },
+  { value: 'inventory_product_valve8', label: 'Products Page - Inventory 8 (valve8)' },
   { value: 'about_page_image', label: 'About Page - Main Image' },
   { value: 'gallery_image_1', label: 'Gallery - Image 1' },
   { value: 'gallery_image_2', label: 'Gallery - Image 2' },
@@ -22,6 +26,10 @@ const AVAILABLE_SECTIONS = [
   { value: 'gallery_image_6', label: 'Gallery - Image 6' },
   { value: 'gallery_image_7', label: 'Gallery - Image 7' },
   { value: 'gallery_image_8', label: 'Gallery - Image 8' },
+  { value: 'gallery_image_9', label: 'Gallery - Image 9' },
+  { value: 'gallery_image_10', label: 'Gallery - Image 10' },
+  { value: 'gallery_image_11', label: 'Gallery - Image 11' },
+  { value: 'gallery_image_12', label: 'Gallery - Image 12' },
 ];
 
 const AVAILABLE_TEXT_SECTIONS = [
@@ -41,6 +49,30 @@ const AVAILABLE_TEXT_SECTIONS = [
   { value: 'home_product_valve3_size', label: 'Home Page - Product 3 Size' },
   { value: 'home_product_valve4_title', label: 'Home Page - Product 4 Title' },
   { value: 'home_product_valve4_size', label: 'Home Page - Product 4 Size' },
+  { value: 'inventory_product_valve1_title', label: 'Inventory - Product 1 Title (Check Valve)' },
+  { value: 'inventory_product_valve1_size', label: 'Inventory - Product 1 Size (Check Valve)' },
+  { value: 'inventory_product_valve1_desc', label: 'Inventory - Product 1 Desc (Check Valve)' },
+  { value: 'inventory_product_valve2_title', label: 'Inventory - Product 2 Title (Safety Valve)' },
+  { value: 'inventory_product_valve2_size', label: 'Inventory - Product 2 Size (Safety Valve)' },
+  { value: 'inventory_product_valve2_desc', label: 'Inventory - Product 2 Desc (Safety Valve)' },
+  { value: 'inventory_product_valve3_title', label: 'Inventory - Product 3 Title (Control Valve)' },
+  { value: 'inventory_product_valve3_size', label: 'Inventory - Product 3 Size (Control Valve)' },
+  { value: 'inventory_product_valve3_desc', label: 'Inventory - Product 3 Desc (Control Valve)' },
+  { value: 'inventory_product_valve4_title', label: 'Inventory - Product 4 Title (Gate Valve)' },
+  { value: 'inventory_product_valve4_size', label: 'Inventory - Product 4 Size (Gate Valve)' },
+  { value: 'inventory_product_valve4_desc', label: 'Inventory - Product 4 Desc (Gate Valve)' },
+  { value: 'inventory_product_valve5_title', label: 'Inventory - Product 5 Title (Globe Valve)' },
+  { value: 'inventory_product_valve5_size', label: 'Inventory - Product 5 Size (Globe Valve)' },
+  { value: 'inventory_product_valve5_desc', label: 'Inventory - Product 5 Desc (Globe Valve)' },
+  { value: 'inventory_product_valve6_title', label: 'Inventory - Product 6 Title (Check Valve)' },
+  { value: 'inventory_product_valve6_size', label: 'Inventory - Product 6 Size (Check Valve)' },
+  { value: 'inventory_product_valve6_desc', label: 'Inventory - Product 6 Desc (Check Valve)' },
+  { value: 'inventory_product_valve7_title', label: 'Inventory - Product 7 Title (Butterfly Valve)' },
+  { value: 'inventory_product_valve7_size', label: 'Inventory - Product 7 Size (Butterfly Valve)' },
+  { value: 'inventory_product_valve7_desc', label: 'Inventory - Product 7 Desc (Butterfly Valve)' },
+  { value: 'inventory_product_valve8_title', label: 'Inventory - Product 8 Title (Safety Relief Valve)' },
+  { value: 'inventory_product_valve8_size', label: 'Inventory - Product 8 Size (Safety Relief Valve)' },
+  { value: 'inventory_product_valve8_desc', label: 'Inventory - Product 8 Desc (Safety Relief Valve)' },
   { value: 'nav_link_home', label: 'Navigation - Home' },
   { value: 'nav_link_products', label: 'Navigation - Products' },
   { value: 'nav_link_about', label: 'Navigation - About' },
@@ -49,12 +81,34 @@ const AVAILABLE_TEXT_SECTIONS = [
 ];
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState('quotes');
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('tab') || 'quotes';
+    }
+    return 'quotes';
+  });
   const [quotes, setQuotes] = useState<any[]>([]);
   const [images, setImages] = useState<any[]>([]);
   const [texts, setTexts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editImage, setEditImage] = useState<any>(null);
+  const [editImage, setEditImage] = useState<any>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      const sectionParam = params.get('section');
+      if (sectionParam && tabParam === 'images') {
+        const slotNum = sectionParam.split('_').pop();
+        return {
+          id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2),
+          section: sectionParam,
+          title: `Gallery - Image ${slotNum}`,
+          image_url: ''
+        };
+      }
+    }
+    return null;
+  });
   const [uploading, setUploading] = useState(false);
   const [editText, setEditText] = useState<any>(null);
 
@@ -141,8 +195,13 @@ export default function AdminPage() {
   const handleImageUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editImage) return;
+    
+    // Auto-resolve ID to existing row ID if we already have this section configured
+    const existingImage = images.find(i => i.section === editImage.section);
+    const targetId = existingImage ? existingImage.id : editImage.id;
+
     const { error } = await supabase.from('site_images').upsert({
-      id: editImage.id,
+      id: targetId,
       section: editImage.section,
       title: editImage.title,
       image_url: editImage.image_url
@@ -158,8 +217,13 @@ export default function AdminPage() {
   const handleTextUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editText) return;
+
+    // Auto-resolve ID to existing row ID if we already have this section configured
+    const existingText = texts.find(t => t.section === editText.section);
+    const targetId = existingText ? existingText.id : editText.id;
+
     const { error } = await supabase.from('site_content').upsert({
-      id: editText.id,
+      id: targetId,
       section: editText.section,
       title: editText.title,
       content: editText.content
@@ -171,6 +235,8 @@ export default function AdminPage() {
       alert('Error saving text: ' + error.message);
     }
   };
+
+
 
   return (
     <div className="min-h-screen pt-20 bg-slate-50 flex">
@@ -197,6 +263,8 @@ export default function AdminPage() {
             <Type className="w-4 h-4" /> Manage Text Content
           </button>
         </nav>
+
+
       </div>
 
       {/* Content */}

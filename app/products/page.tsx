@@ -1,16 +1,13 @@
-import Image from "next/image";
+'use client';
+import { useEffect } from "react";
 import DynamicImage from "@/components/DynamicImage";
+import DynamicText from "@/components/DynamicText";
 import { Settings } from "lucide-react";
 import { WHATSAPP_LINK } from "@/lib/constants";
 
-export const metadata = {
-  title: "Inventory & Products | A.A Linkers",
-  description: "Browse our extensive inventory of new and used industrial valves.",
-};
-
 const INVENTORY = [
-  { title: "Ball Valves", size: "40mm (DN40)", state: "NEW", img: "valve1", badgeColor: "bg-blue-100 text-blue-700", desc: "High-grade ball valves suitable for isolation in industrial pipelines." },
-  { title: "Pneumatic Actuators", size: "Custom Actuator", state: "USED", img: "valve2", badgeColor: "bg-amber-100 text-amber-700", desc: "Inspected and tested pneumatic systems for automated control." },
+  { title: "Check Valve NRV 150 Class WCB (Swing type Flanged)", size: "4\" (DN100) Class 150", state: "NEW", img: "valve1", badgeColor: "bg-blue-100 text-blue-700", desc: "Heavy-duty cast steel swing check valve with flanged connections, designed to prevent fluid reversal in high-pressure industrial lines." },
+  { title: "Safety Valve PN-16 / PN-40 / PN-25 (Flange Type)", size: "Various Sizes", state: "NEW", img: "valve2", badgeColor: "bg-blue-100 text-blue-700", desc: "High-performance spring-loaded safety valves designed for overpressure protection with standard flanged connections." },
   { title: "Control Valve", size: "2-inch ANSI", state: "NEW", img: "valve3", badgeColor: "bg-blue-100 text-blue-700", desc: "Precision control valves for managing flow rate and pressure." },
   { title: "Gate Valve", size: "80mm Class 150", state: "USED", img: "valve4", badgeColor: "bg-amber-100 text-amber-700", desc: "Heavy-duty gate valves salvaged and refurbished for bulk supply." },
   { title: "Globe Valve", size: "50mm Flanged", state: "NEW", img: "valve5", badgeColor: "bg-blue-100 text-blue-700", desc: "Excellent throttling capabilities for high-demand environments." },
@@ -20,6 +17,12 @@ const INVENTORY = [
 ];
 
 export default function ProductsPage() {
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.title = "Inventory & Products | A.A Linkers";
+    }
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen pt-16 bg-slate-50 w-full">
       <section className="industrial-gradient py-24 text-center px-6">
@@ -49,14 +52,29 @@ export default function ProductsPage() {
                   className="object-cover group-hover:scale-105 transition-all duration-300"
                 />
               </div>
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-bold text-sm text-slate-800 uppercase">{product.title}</h3>
-                <span className={`text-[10px] px-1.5 rounded font-bold ${product.badgeColor}`}>
+              <div className="flex justify-between items-start mb-2 gap-2">
+                <DynamicText
+                  as="h3"
+                  section={`inventory_product_${product.img}_title`}
+                  fallback={product.title}
+                  className="font-bold text-sm text-slate-800 uppercase line-clamp-2"
+                />
+                <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold shrink-0 ${product.badgeColor}`}>
                   {product.state}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 mb-2 font-medium">Size: {product.size}</p>
-              <p className="text-xs text-slate-600 mb-6 flex-1">{product.desc}</p>
+              <div className="text-[11px] text-slate-500 mb-2 font-medium">
+                Size: <DynamicText
+                  section={`inventory_product_${product.img}_size`}
+                  fallback={product.size}
+                />
+              </div>
+              <div className="text-xs text-slate-600 mb-6 flex-1">
+                <DynamicText
+                  section={`inventory_product_${product.img}_desc`}
+                  fallback={product.desc}
+                />
+              </div>
               <a 
                 href={WHATSAPP_LINK}
                 target="_blank"

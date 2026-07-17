@@ -138,8 +138,8 @@ export default function Home() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {[
-              { title: "Ball Valves", size: "40mm (DN40)", state: "NEW", img: "valve1", badgeColor: "bg-blue-100 text-blue-700" },
-              { title: "Pneumatic", size: "Custom Actuator", state: "USED", img: "valve2", badgeColor: "bg-amber-100 text-amber-700" },
+              { title: "Check Valve", size: "4\" (DN100) Class 150", state: "NEW", img: "valve1", badgeColor: "bg-blue-100 text-blue-700" },
+              { title: "Safety Valve", size: "PN-16 / PN-40 / PN-25", state: "NEW", img: "valve2", badgeColor: "bg-blue-100 text-blue-700" },
               { title: "Control Valve", size: "2-inch ANSI", state: "NEW", img: "valve3", badgeColor: "bg-blue-100 text-blue-700" },
               { title: "Gate Valve", size: "80mm Class 150", state: "USED", img: "valve4", badgeColor: "bg-amber-100 text-amber-700" }
             ].map((product, idx) => (

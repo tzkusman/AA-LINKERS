@@ -20,9 +20,9 @@ export default function DynamicText({
     let isMounted = true;
     const fetchText = async () => {
       try {
-        const { data } = await supabase.from('site_content').select('content').eq('section', section).single();
-        if (data?.content && isMounted) {
-          setText(data.content);
+        const { data } = await supabase.from('site_content').select('content').eq('section', section).order('id', { ascending: false }).limit(1);
+        if (data && data.length > 0 && isMounted) {
+          setText(data[0].content);
         }
       } catch (err) {
         // Ignore error

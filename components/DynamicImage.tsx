@@ -11,9 +11,9 @@ export default function DynamicImage({ section, fallbackSrc, alt, fill, classNam
     let isMounted = true;
     const fetchImage = async () => {
       try {
-        const { data } = await supabase.from('site_images').select('image_url').eq('section', section).single();
-        if (data?.image_url && isMounted) {
-          setSrc(data.image_url);
+        const { data } = await supabase.from('site_images').select('image_url').eq('section', section).order('id', { ascending: false }).limit(1);
+        if (data && data.length > 0 && isMounted) {
+          setSrc(data[0].image_url);
         }
       } catch (err) {
         // Ignore errors, it just means no custom image
